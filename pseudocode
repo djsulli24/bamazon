@@ -1,0 +1,37 @@
+DATABASE
+
+Products table schema: 
+
+item_id (unique id for each product)
+product_name (Name of product)
+department_name
+price (cost to customer)
+stock_quantity (how much of the product is available in stores)
+
+BAMAZONCUSTOMER.JS
+
+purchasePrompt()
+    Retrieve all products from db 
+    Print all product data 
+    Ask which ID of product customer wants to buy
+    Ask how much
+    Feed ID and QUANTITY into checkPurchasePossible()
+
+checkPurchasePossible(id, quantity)
+    Queries the database for the product matching the ID
+    Compares the stock_quantity value to QUANTITY parameter
+        IF user is able to purchase, call purchase()
+        Else, display failure message and call purchasePrompt()
+
+purchase(id, quantity)
+    Query table for id
+        IF id === 0, remove product
+            call continuePrompt()
+        ELSE, update stock_quantity -= quantity
+            Print success message
+                call continuePrompt()
+    
+continuePrompt()
+    Do you want to purchase another item?
+        IF true, call purchasePrompt
+        ELSE, quit
