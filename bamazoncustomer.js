@@ -1,3 +1,3 @@
-var bamazon = require('./bamazon');
+var bamazon = require('./components/bamazon');
 
 bamazon.renderProducts();

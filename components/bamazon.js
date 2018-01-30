@@ -70,7 +70,47 @@ var bamazon = {
         );
     },
     doPurchase: function() {
-        console.log ("Yes, going to purchase " + this.currentQuantity + " of product ID " + this.currentID);
+        let requestedQuantity = this.currentQuantity;
+        let requestedID = this.currentID;
+        let instance = this;
+        connection.query(`SELECT stock_quantity FROM products WHERE item_id = ${requestedID};`, function (error, results, fields) {
+            if (error) throw error;
+            let stockQuantity = results[0]["stock_quantity"];
+            let newAmount = stockQuantity - requestedQuantity;
+            connection.query(`UPDATE products
+            SET stock_quantity = ${newAmount}
+            WHERE item_id = ${requestedID};`, function (error, results, fields) {
+                if (error) throw error;
+                connection.query(`SELECT price FROM products WHERE item_id = ${requestedID};`, function (error, results, fields) {
+                    if (error) throw error;
+                    console.log("\nThe total for this purchase is $" + (results[0]["price"]*requestedQuantity).toFixed(2) + ". It has been charged to your credit card.\n")
+                    instance.buyAgainPrompt();
+                });
+            });
+        });
+        this.currentID = 0;
+        this.currentQuantity = 0;
+    },
+    buyAgainPrompt: function() {
+        inquirer.prompt(
+            [
+                {
+                    name: 'buyagain',
+                    type: 'confirm',
+                    message: 'You have successfully completed your order. Would you like to purchase something else?'
+                }
+            ]
+        )
+        .then(
+            answers => {
+                if (answers.buyagain) {
+                    this.renderProducts();
+                }
+                else {
+                    process.exit();
+                }
+            }
+        );
     }
 };
 

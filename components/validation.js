@@ -16,8 +16,8 @@ function validation(id, quantity) {
         connection.query(`SELECT item_id FROM products WHERE item_id = ${this.id};`, function (error, results, fields) {
             if (error) throw error;
             if (results.length === 0) {
-                console.log("Invalid product ID. Try again.\n\n");
-                instance.renderProducts();
+                console.log(`\n------------------------------\nInvalid product ID. Try again.\n------------------------------\n`);
+                instance.purchasePrompt();
             }
             else {
                 instance.quantityPrompt();
@@ -29,11 +29,13 @@ function validation(id, quantity) {
         let instance = this;
         connection.query(`SELECT stock_quantity FROM products WHERE item_id = ${this.id};`, function (error, results, fields) {
             if (error) throw error;
-            console.log("Amount existing: " + results[0]["stock_quantity"]);
-            console.log("Amount you want: " + quantity);
             if (quantity > results[0]["stock_quantity"]) {
-                console.log("\nThe number you wish to purchase of that item is more than we have in stock. Please enter a new number.\n")
+                console.log("\n---------------------------------\nThe quantity you wish to purchase \nof that item is more than we \nhave in stock. Please enter a \nnew quantity.\n---------------------------------\n");
                 instance.quantityPrompt();
+            }
+            else if (quantity === 0) {
+                console.log("\n---------------------------------\nYou must order at least one item.\n---------------------------------\n");
+                instance.quantityPrompt();                
             }
             else {
                 instance.doPurchase();
