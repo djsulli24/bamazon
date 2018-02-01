@@ -14,7 +14,7 @@ The bamazoncustomer.js file is the customer application.
 The bamazonManager.js file is the manager application.
 
 ## Full Video Walkthroughs
-<a href="assets/images/fullcustomer.mov">Full Customer Walkthrough</a>
+<a href="assets/images/fullcustomer.mov">Full Customer Walkthrough</a><br>
 <a href="assets/images/fullmanager.mov">Full Manager Walkthrough</a>
 
 ## Authors
