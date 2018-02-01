@@ -1,3 +1,7 @@
+// This module validates the user's entered product ID
+// and quantity against the IDs and quantities in the db, then
+// calls the appropriate callback function
+
 var mysql = require('mysql');
 var bamazon = require('./bamazon');
 var connection = mysql.createConnection({

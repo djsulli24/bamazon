@@ -1,3 +1,7 @@
+// This module validates the manager's entered product ID
+// against the IDs in the db, then
+// calls the appropriate callback function
+
 var mysql = require('mysql');
 var bamazon = require('./bamazon');
 var connection = mysql.createConnection({
@@ -23,24 +27,6 @@ function validation(id, quantity) {
                 instance.addInventory(instance.id);
             }
         })
-    },
-    this.quantityValidation = function() {
-        let quantity = this.quantity; 
-        let instance = this;
-        connection.query(`SELECT stock_quantity FROM products WHERE item_id = ${this.id};`, function (error, results, fields) {
-            if (error) throw error;
-            if (quantity > results[0]["stock_quantity"]) {
-                console.log("\n---------------------------------\nThe quantity you wish to purchase \nof that item is more than we \nhave in stock. Please enter a \nnew quantity.\n---------------------------------\n");
-                instance.quantityPrompt();
-            }
-            else if (quantity === 0) {
-                console.log("\n---------------------------------\nYou must order at least one item.\n---------------------------------\n");
-                instance.quantityPrompt();                
-            }
-            else {
-                instance.doPurchase();
-            }
-        });
     }
 };
 

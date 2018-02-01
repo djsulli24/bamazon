@@ -18,6 +18,8 @@ var connection = mysql.createConnection({
 });
 
 var bamazonManager = {
+    // Prompts the user which action they wish to take, 
+    // then calls the appropriate function
     start: function() {
         let instance =
         inquirer.prompt([
@@ -45,6 +47,7 @@ var bamazonManager = {
             }
         });
     },
+    // Renders a table of the products on the command line
     viewProducts: function(callback) {
         let instance = this;
         connection.query(`SELECT * FROM products;`, function (error, results, fields) {
@@ -53,6 +56,8 @@ var bamazonManager = {
             instance.start();
         });
     },
+    // Renders a table of products on the command line, only
+    // those products with fewer than 6 products
     viewInventory: function(callback) {
         let instance = this;
         connection.query(`SELECT * FROM products WHERE stock_quantity < 6;`, function (error, results, fields) {
@@ -66,6 +71,7 @@ var bamazonManager = {
             }
         });
     },
+    // Prompts the user for the ID of a product whose inventory they wish to add to
     promptInventory: function() {
         let instance = this;
         connection.query(`SELECT * FROM products;`, function (error, results, fields) {
@@ -85,6 +91,9 @@ var bamazonManager = {
             })
         })
     },
+    // This functions takes the id of a product, prompts the user for a quantity
+    // then updates the stock_quantity value for that product in the db to be
+    // += the user's entered quantity
     addInventory: function(id) {
         inquirer.prompt([
             {
@@ -107,6 +116,8 @@ var bamazonManager = {
             });
         });
     },
+    // Runs the user through prompts and validation to add a product to the
+    // db, then passes all product values to the addProduct() function
     promptProduct: function() {
         let name, dept, price, stock;
         let instance = this;
@@ -167,6 +178,7 @@ var bamazonManager = {
         }
         promptNameDeptPrice();
     },
+    // Asks the user whether they wish to take another action or quit the program
     againPrompt: function() {
         inquirer.prompt(
             [
@@ -188,6 +200,7 @@ var bamazonManager = {
             }
         );
     },
+    // Takes all necessary product values, then adds the product to the db
     addProduct: function(name, dept, price, stock) {
         connection.query(`INSERT INTO products (product_name, department_name, price, stock_quantity)
         VALUES ('${name}', '${dept}', '${price}', '${stock}');`, (err, results, fields)=> {

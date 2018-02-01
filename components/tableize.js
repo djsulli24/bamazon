@@ -1,3 +1,6 @@
+// This module converts results from mysql query into a format
+// that can be digested by the table package to render a table on the command line
+
 var tableize = {
     format: function(inputArray) {
         let resultArray = [
