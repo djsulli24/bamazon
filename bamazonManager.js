@@ -40,7 +40,7 @@ var bamazonManager = {
                 this.promptInventory();
                 break;
                 case "Add New Product":
-                this.addProduct();
+                this.promptProduct();
                 break;
             }
         });
@@ -107,8 +107,65 @@ var bamazonManager = {
             });
         });
     },
-    addProduct: function(callback) {
-        return;
+    promptProduct: function() {
+        let name, dept, price, stock;
+        let instance = this;
+        function promptNameDeptPrice() {
+            inquirer.prompt([
+                {
+                    name: 'name',
+                    type: 'input',
+                    message: `What is the product name?`
+                },
+                {
+                    name: 'dept',
+                    type: 'input',
+                    message: `What is the product department?`
+                }
+            ])
+            .then(answer=> {
+                name = answer.name;
+                dept = answer.dept;
+                promptPrice();
+            });
+        };
+        function promptPrice() {
+            inquirer.prompt([
+                {
+                    name: 'price',
+                    type: 'input',
+                    message: `What is the product price? (omit dollar sign $)`
+                }
+            ])
+            .then(answer=> {
+                if (parseFloat(answer.price) > 0) {
+                    price = answer.price;
+                    promptStock();
+                } else {
+                    console.log("\nInvalid entry. Enter only numbers.\n")
+                    promptPrice();
+                }
+            });
+        }
+        function promptStock() {
+            inquirer.prompt([
+                {
+                    name: 'stock',
+                    type: 'input',
+                    message: `How many units of the product do you wish to add?`                  
+                }
+            ])
+            .then(answer=> {
+                if (answer.stock.indexOf(".") === -1 && parseInt(answer.stock) >= 0) {
+                    stock = answer.stock;
+                    instance.addProduct(name, dept, price, stock);
+                } else {
+                    console.log("\nInvalid entry. Enter only whole numbers.\n")
+                    promptStock();
+                }
+            });
+        }
+        promptNameDeptPrice();
     },
     againPrompt: function() {
         inquirer.prompt(
@@ -130,6 +187,16 @@ var bamazonManager = {
                 }
             }
         );
+    },
+    addProduct: function(name, dept, price, stock) {
+        connection.query(`INSERT INTO products (product_name, department_name, price, stock_quantity)
+        VALUES ('${name}', '${dept}', '${price}', '${stock}');`, (err, results, fields)=> {
+            if (err) {throw err;}
+            else {
+                console.log ("\nYou have successfully added your product to the inventory.\n");
+                this.againPrompt();
+            }
+        });
     }
 };
 
