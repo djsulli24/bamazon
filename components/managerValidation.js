@@ -17,10 +17,10 @@ function validation(id, quantity) {
             if (error) throw error;
             if (results.length === 0) {
                 console.log(`\n------------------------------\nInvalid product ID. Try again.\n------------------------------\n`);
-                instance.purchasePrompt();
+                instance.promptInventory();
             }
             else {
-                instance.quantityPrompt();
+                instance.addInventory(instance.id);
             }
         })
     },
